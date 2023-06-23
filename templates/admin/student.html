@@ -1,0 +1,38 @@
+{% extends 'admin/_base.html' %}
+{% block content %}
+<div>
+    <div style="margin-bottom:15px;">
+        <a class="btn btn-primary" href="/admin/student/edit/">新 增</a>
+    </div>
+    <table class="table table-bordered table-striped table-hover  table-sm">
+        <caption style="caption-side: top;">学生信息</caption>
+        <thead>
+            <tr>
+                <th style="width:75px;text-align:center;">序号</th>
+                <th>学生学号</th>
+                <th>学生名字</th>
+                <th style="width:180px;text-align:center;">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for n in list %}
+            <tr>
+                <td style="text-align:center;">
+                    {{forloop.counter }}
+                </td>
+                <td>
+                    {{n.username}}
+                </td>
+                <td>
+                    {{n.nickname}}
+                </td>
+                <td style="text-align:center;">
+                    <a class="btn btn-primary btn-sm" href="/admin/student/edit/?id={{n.id}}">编 辑</a>
+                    <a class="btn btn-danger btn-sm" href="/admin/student/delete/?id={{n.id}}">删 除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

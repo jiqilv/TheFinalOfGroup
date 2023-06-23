@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录</title>
+    {% include '_static.html' %}
+    <style>
+        .back {
+            background-color: rgb(255 255 255 /.3);
+            position: absolute;
+            top: -9vh;
+            left: 0px;
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body style="height:91vh;background-image: url('/static/images/admin.jpg');background-size: 100% 100%;background-repeat: no-repeat;position: relative;">
+    <div class="back">
+    </div>
+    <div style="display: flex;justify-content: center;margin-top: 9vh;">
+        <div class="card" style="width:450px;background-color: rgb(255 255 255 /.6)">
+            <div class="card-body" style="padding: 60px;">
+                <form class='form-login' action="/admin/login/" method="post">
+                    {% if code == 404 %}
+                    <div class="alert alert-warning" style="margin-top:18px">{{ message }}</div>
+                    {% endif %}
+                    {% csrf_token %}
+                    <h2 class="text-center">管理员登录</h2>
+                    <div class="form-group">
+                        <label for="id_username">用户名：</label>
+                        <input type="text" name='username' class="form-control" id="id_username" placeholder="Username" autofocus required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_password">密码：</label>
+                        <input type="password" name='password' class="form-control" id="id_password" placeholder="Password" required>
+                    </div>
+                    <div style="display: flex;">
+                        <button type="reset" class="btn btn-default pull-left">重置</button>
+                        <div style="flex:1;"></div>
+                        <button type="submit" class="btn btn-primary pull-right">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网上选课-管理员</title>
+    {% include '_static.html' %}
+</head>
+
+<body>
+    <div style="display:flex;margin: 0px 120px auto;margin-top: 40px;">
+        <div class="admin-menu" style="width:300px">
+            <div class="card">
+                <div class="card-header">
+                    <div style="display: flex;align-items: center;">
+                        <div style="flex:1;">网上选课-管理员</div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                {{request.user}}
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="/admin/loginOut/">注 销</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == '/admin/student/' %} active {% endif %}" href="/admin/student/">学生信息</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == '/admin/teacher/' %} active {% endif %}" href="/admin/teacher/">教师信息</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == '/admin/course/' %} active {% endif %}" href="/admin/course/">课程信息</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == '/admin/record/' %} active {% endif %}" href="/admin/record/">选课信息</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="flex:1;margin:0px 30px auto;">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</body>
+
+</html>
