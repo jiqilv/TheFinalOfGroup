@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+
+
+{% block js %}
+    <link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-table-pagejump.css">
+    <script>
+
+        function confirm_info() {
+            var remain_seats = document.getElementById('remain_seats').innerHTML;
+            document.getElementById('book_btns').style.display = "none";
+            if (remain_seats > 0) {
+                document.getElementById('book_success').style.display = "block";
+            } else {
+                document.getElementById('book_failure').style.display = "block";
+            }
+        }
+
+        // ajax异步刷新页面
+        function PostData() {
+            $.ajax({
+                type: "POST",
+                url: "",
+                data: ""
+            });
+            return false; // 必须这一句，不然还会刷新页面
+        }
+
+    </script>
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-pagejump.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid" style="margin-top: 20px">
+        <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form class="form-inline" action="/mall/data.json">
+                <div class="form-group">
+                    <label >课程名字</label>&nbsp;&nbsp;
+                    <input type="text" class="form-control" id="course_name" placeholder="请输入课程名字">
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-group">
+                    <label for="name">授课教师</label>&nbsp;&nbsp;
+                    <input type="text" class="form-control" id="teacher" placeholder="请输入授课教师">
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-group">
+                    <label for="types">上课地点</label>&nbsp;&nbsp;
+                    <input type="text" class="form-control" id="address" placeholder="请输入上课地点">
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-group">
+                    <label >学期</label>
+                    <select class="form-control" id="term">
+                        <option value="">全部</option>
+                        <option value="1">上学期</option>
+                        <option value="2">下学期</option>
+                    </select>&nbsp;&nbsp;
+                </div>
+                <button type="button" class="btn btn-primary pull-right" id="search">查询信息&nbsp;<span class="glyphicon glyphicon-search"></span></button>
+            </form>
+
+        </div>
+    </div>
+    <table id="test-table" class="ta" data-search="true"></table>
+    </div>
+
+    <div class="modal fade" id="user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <input type="hidden" id="train" value="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">选择乘车人</h4>
+                </div>
+                <div id="content" class="modal-body">
+                    <div class="form-group">
+                        <label>乘车人</label>
+                        <select id="basic" class="selectpicker show-tick form-control">
+                            </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="select_btn" class="btn btn-default" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(function () {
+        $('#test-table').bootstrapTable({
+                method: 'post',
+                url: "/course_info/",
+                contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+                dataType:'json',
+                queryParams: function (params) {
+                    var name = $('#course_name').val();
+                    var teacher = $('#teacher').val();
+                    var address = $('#address').val();
+                    var term = $('#term').val();
+                    var param = {
+                        'course': name,
+                        'teacher': teacher,
+                        'address': address,
+                        'term': term
+                    };
+                    return param;
+                },
+                toolbar: '#toolbar',    //工具按钮用哪个容器
+                striped: true,      //是否显示行间隔色
+                cache: false,      //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,     //是否显示分页（*）
+                sortable: true,      //是否启用排序
+                sortOrder: "asc",     //排序方式
+                pageNumber: 1,      //初始化加载第一页，默认第一页
+                pageSize: 10,      //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],  //可供选择的每页的行数（*）
+                //queryParams: queryParams,//前端调用服务时，会默认传递上边提到的参数，如果需要添加自定义参数，可以自定义一个函数返回请求参数
+                sidePagination: "client",   //分页方式：client客户端分页，server服务端分页（*）
+                // search: true,      //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                //showColumns: true,     //是否显示所有的列
+                // showRefresh: true,     //是否显示刷新按钮
+                minimumCountColumns: 2,    //最少允许的列数
+                clickToSelect: true,    //是否启用点击选中行
+                searchOnEnterKey: true,
+                showToggle: false,
+                search: false,
+                datasearch: true,
+                paginationShowPageGo: true,
+                columns: [{
+                    field: 'id',
+                    title: '课程编号',
+                    align: 'center'
+                }, {
+                    field: 'name',
+                    title: '课程名字',
+                    searchable: true,
+                    align: 'center'
+                }, {
+                    field: 'teacher',
+                    title: '授课教师',
+                    align: 'center',
+                    searchable: true
+                }, {
+                    field: 'address',
+                    title: '上课地点',
+                    sortable: true,
+                    align: 'center',
+                    searchable: true,
+                },{
+                    field: 'term',
+                    title: '学期',
+                    sortable: true,
+                    searchable: true,
+                    align: 'center',
+                }, {
+                    field: 'action',
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        //通过formatter可以自定义列显示的内容
+                        //value：当前field的值，即id
+                        //row：当前行的数据
+                        var id = row.id;
+                        var result = "";
+                        result += "<a href='#' class='btn btn-primary btn-xs' onclick=\"study('" + id + "')\" title='选课'>选课&nbsp;<span class='glyphicon glyphicon-share'></span></a>";
+
+                        return result;
+                    }
+                }],
+            });
+
+        $('#search').click(function () {
+            $('#test-table').bootstrapTable('refresh')
+        });
+
+    });
+    function study(id){
+        $.get("/select/?course_id="+id, function (data) {
+          alert(data.detail);
+        });
+
+    }
+</script>
+{% endblock %}

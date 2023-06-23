@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+        .main {
+            margin-top: 20px;
+            margin-left: 50px;
+            margin-right: 50px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+<h3 align="center">我的课程</h3>
+    <div class="main">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th style="text-align: center">学号</th>
+                <th style="text-align: center">学生</th>
+                <th style="text-align: center">课程名</th>
+                <th style="text-align: center">上课地点</th>
+                <th style="text-align: center">学期</th>
+                <th style="text-align: center">授课教师</th>
+                <th style="text-align: center">操作</th>
+            </tr>
+            </thead>
+            <tbody style="text-align: center">
+            {% for i in cr %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.student.nickname }}</td>
+                    <td>{{ i.course.name }}</td>
+                    <td>{{ i.course.address }}</td>
+                    <td>{{ i.course.get_term_display }}</td>
+                    <td>{{ i.course.teacher.nickname }}</td>
+                    <td><button class="btn btn-sm btn-danger" onclick="refund({{ i.id }})">退课</button></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<script>
+function refund(id){
+    $.get("/refund/",{id:id},function(result){
+            alert(result.detail)
+            window.location.reload();
+    })
+}
+
+</script>
+{% endblock %}
