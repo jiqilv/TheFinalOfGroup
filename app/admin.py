@@ -3,6 +3,7 @@ from app.models import *
 from django.contrib.auth.admin import User, Group
 
 
+
 # Register your models here.
 
 
